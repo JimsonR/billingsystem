@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BillingsystemApplication {
 
 	public static void main(String[] args) {
+
+
 		SpringApplication.run(BillingsystemApplication.class, args);
 	}
 
