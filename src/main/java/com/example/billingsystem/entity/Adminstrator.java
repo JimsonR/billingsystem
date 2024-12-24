@@ -31,7 +31,7 @@ public class Adminstrator implements UserDetails {
     private String garageName;
 
     @Column(nullable = false)
-    private String garageNumber;
+    private String garageAddress;
 
     @Column(nullable = false)
     private String password;
