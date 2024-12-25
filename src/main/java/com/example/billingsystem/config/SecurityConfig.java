@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -42,7 +43,8 @@ public class SecurityConfig {
         http.cors(cors->{})
                 .csrf((csrf)->csrf.disable())
                 .authorizeHttpRequests((requests)->{
-                 requests.requestMatchers("/","/auth/registration","/auth/login")   .permitAll()
+                 requests.requestMatchers("/","/auth/registration")   .permitAll()
+                         .requestMatchers("/auth/login").permitAll()
                          .anyRequest().authenticated();
 
                 });
@@ -54,6 +56,8 @@ public class SecurityConfig {
 
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -70,4 +74,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
         return builder.getAuthenticationManager();
     }
+
+
 }

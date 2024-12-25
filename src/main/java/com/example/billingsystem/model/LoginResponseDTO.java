@@ -17,6 +17,15 @@ public class LoginResponseDTO {
 
     private String username;
 
+    @Override
+    public String toString() {
+        return "LoginResponseDTO{" +
+                "jwtToken='" + jwtToken + '\'' +
+                ", username='" + username + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
+
     private List<String> roles;
 
 

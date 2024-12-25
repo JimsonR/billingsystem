@@ -1,6 +1,7 @@
 package com.example.billingsystem.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -21,7 +22,7 @@ public class JwtUtils {
     @Value("${spring.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${sprong.app.jwtExpirationMs}")
+    @Value("${spring.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String getJwtFromHeader(HttpServletRequest request){
