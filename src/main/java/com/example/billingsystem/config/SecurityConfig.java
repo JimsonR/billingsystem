@@ -43,9 +43,9 @@ public class SecurityConfig {
         http.cors(cors->{})
                 .csrf((csrf)->csrf.disable())
                 .authorizeHttpRequests((requests)->{
-                 requests.requestMatchers("/","/auth/registration")   .permitAll()
+                 requests.requestMatchers("/","/auth/registration").permitAll()
                          .requestMatchers("/auth/login").permitAll()
-                         .anyRequest().authenticated();
+                         .anyRequest().authenticated();// ee line em cheptundhi ante inkemi request ayina vaste daniki authentication kavali
 
                 });
         http.sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

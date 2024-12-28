@@ -16,7 +16,6 @@ public class GlobalCorsConfig {
 
         corsConfiguration.addAllowedOrigin("http://localhost:4200");
         corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedMethod("*");
 
         corsConfiguration.setAllowCredentials(true);

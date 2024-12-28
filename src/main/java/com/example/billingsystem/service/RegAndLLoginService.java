@@ -6,6 +6,7 @@ import com.example.billingsystem.model.LoginFormDTO;
 import com.example.billingsystem.model.LoginResponseDTO;
 import com.example.billingsystem.model.RegistrationFormDTO;
 import com.example.billingsystem.repository.AdminRepository;
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,7 +54,7 @@ public class RegAndLLoginService {
         return "Admin registered successfully";
     }
 
-    public String login(LoginFormDTO login){
+    public Map<String, Object> login(LoginFormDTO login){
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
@@ -63,7 +64,7 @@ public class RegAndLLoginService {
             map.put("message", "Bad Credentials");
             map.put("status","false");
 
-            return map.toString();
+            return map;
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -75,7 +76,13 @@ public class RegAndLLoginService {
                 .map(item -> item.getAuthority())
                 .toList();
         LoginResponseDTO responseDTO = new LoginResponseDTO(userDetails.getUsername(),roles,jwt);
-        return responseDTO.toString() ;
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", "Login successful");
+        map.put("jwt",responseDTO.getJwtToken());
+        map.put("status","true");
+
+
+        return map;
     }
 
 
