@@ -26,6 +26,9 @@ public class Adminstrator implements UserDetails {
     private String phoneNumber;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String garageName;
 
     @Column(nullable = false)
@@ -83,6 +86,14 @@ public class Adminstrator implements UserDetails {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
@@ -112,4 +123,6 @@ public class Adminstrator implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

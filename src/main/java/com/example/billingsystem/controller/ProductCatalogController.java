@@ -1,5 +1,8 @@
 package com.example.billingsystem.controller;
 
+import com.example.billingsystem.entity.Product;
+import com.example.billingsystem.model.ProductModel;
+import com.example.billingsystem.service.ProductService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -9,16 +12,14 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("products")
@@ -32,6 +33,9 @@ public class ProductCatalogController {
 
     @Autowired
     private Job importInventoryJob;
+
+    @Autowired
+    private ProductService productService;
 
 
 //    @PostMapping("/upload")
@@ -89,6 +93,30 @@ public class ProductCatalogController {
     public ResponseEntity<String> uploadInventoryCSV(@RequestParam("file") MultipartFile file){
         return processCSV(file,importInventoryJob,"inventoryFile");
     }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> addProduct(@RequestBody ProductModel productModel){
+        return ResponseEntity.ok(productService.createProduct(productModel));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateProduct(@RequestBody ProductModel productModel){
+        return ResponseEntity.ok(productService.createProduct(productModel));
+
+    }
+
+    @GetMapping("/allproducts")
+    public ResponseEntity<?> allProducts(){
+
+        return ResponseEntity.ok(productService.getAllProducts().getFirst());
+    }
+
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteProduct(@RequestBody Long id){
+        return ResponseEntity.ok(productService.deleteProduct(id));
+    }
+
 
 
 

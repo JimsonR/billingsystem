@@ -46,6 +46,7 @@ public class RegAndLLoginService {
         Adminstrator adminstrator = new Adminstrator();
         adminstrator.setFullName(admin.fullName);
         adminstrator.setPhoneNumber(admin.phoneNumber);
+        adminstrator.setEmail(admin.email);
         adminstrator.setGarageName(admin.garageName);
         adminstrator.setGarageAddress(admin.garageAddress);
         adminstrator.setPassword(passwordEncoder.encode(admin.password));
@@ -64,7 +65,7 @@ public class RegAndLLoginService {
             map.put("message", "Bad Credentials");
             map.put("status","false");
 
-            return map;
+            return map; // idhi bad login ki status false vastadhi
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -77,12 +78,14 @@ public class RegAndLLoginService {
                 .toList();
         LoginResponseDTO responseDTO = new LoginResponseDTO(userDetails.getUsername(),roles,jwt);
         Map<String, Object> map = new HashMap<>();
-        map.put("message", "Login successful");
+        map.put("message", "Login suc" +
+                "" +
+                "cessful");
         map.put("jwt",responseDTO.getJwtToken());
         map.put("status","true");
 
 
-        return map;
+        return map; // idhemo correct
     }
 
 

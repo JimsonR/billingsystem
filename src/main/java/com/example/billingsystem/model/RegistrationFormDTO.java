@@ -5,6 +5,8 @@ public class RegistrationFormDTO {
 
     public String phoneNumber;
 
+    public String email;
+
     public String garageName;
 
     public String garageAddress;
