@@ -7,20 +7,24 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Entity
-public class ProductCatalog {
+public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long inventoryId;
 
-    @Column(name = "name" , nullable = false)
-    private String name;
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "productId" , nullable = false)
+    private Product productId;
+
+//    @Column(name = "name" , nullable = false)
+//    private String name;
 
     @Column(name = "category" , nullable = false)
     private String category;
 
-    @Column(name = "description")
-    private String description;
+//    @Column(name = "description")
+//    private String description;
 
     @Column(name = "price" , nullable = false )
     private BigDecimal price;
@@ -37,20 +41,28 @@ public class ProductCatalog {
     @Column(name = "updated_at" , columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updateAt;
 
-    public Long getProductId() {
+    public Product getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(Product productId) {
         this.productId = productId;
     }
 
-    public String getName() {
-        return name;
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+
+    public Long getInventoryId() {
+        return inventoryId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setInventoryId(Long inventoryId) {
+        this.inventoryId = inventoryId;
     }
 
     public String getCategory() {
@@ -61,13 +73,13 @@ public class ProductCatalog {
         this.category = category;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
 
     public BigDecimal getPrice() {
         return price;
@@ -95,8 +107,8 @@ public class ProductCatalog {
         return isActive;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getCreatedAt() {
