@@ -20,7 +20,6 @@ public class Product {
     @Column(nullable = false)
     private String description;
 
-
     @Column(name = "is_active" , nullable = false , columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive = true;
 
@@ -62,12 +61,12 @@ public class Product {
         this.description = description;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getCreatedAt() {

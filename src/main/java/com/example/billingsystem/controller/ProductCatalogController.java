@@ -108,7 +108,7 @@ public class ProductCatalogController {
     @GetMapping("/allproducts")
     public ResponseEntity<?> allProducts(){
 
-        return ResponseEntity.ok(productService.getAllProducts().getFirst());
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
 
