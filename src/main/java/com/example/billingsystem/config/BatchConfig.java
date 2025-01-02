@@ -43,6 +43,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Configuration
 @EnableBatchProcessing
@@ -126,8 +128,8 @@ public class BatchConfig {
 
     @Bean
     @StepScope
-    public FlatFileItemReader<Inventory> inventoryReader(@Value("#{jobParameters['inventoryFile']}") String inventoryFilePath){
-        if (inventoryFilePath == null){
+    public FlatFileItemReader<Inventory> inventoryReader(@Value("#{jobParameters['inventoryFile']}") String inventoryFilePath) {
+        if (inventoryFilePath == null) {
             throw new IllegalArgumentException("Inventory file is required");
         }
         Path path = Paths.get(inventoryFilePath);
@@ -135,33 +137,57 @@ public class BatchConfig {
                 .name("inventoryItemReader")
                 .resource(new FileSystemResource(path.toFile()))
                 .delimited()
-                .names("inventoryId","productId", "category","price","availableQuantity")
+                .names( "productId", "stockQuantity", "reorderLevel", "supplierName", "location", "unitPrice", "totalValue", "isActive", "lastStockDate")
                 .linesToSkip(1)
-//                .fieldSetMapper(new BeanWrapperFieldSetMapper<>(){{
-//                    setTargetType(Inventory.class);
-//                }})
-                .fieldSetMapper(new FieldSetMapper<Inventory>(){
-                    @Override
-                    public Inventory mapFieldSet(FieldSet fieldSet) throws BindException {
-                        Inventory inventory = new Inventory();
-                        inventory.setInventoryId(fieldSet.readLong("inventoryId"));
-                        inventory.setCategory(fieldSet.readString("category"));
-                        inventory.setPrice(fieldSet.readBigDecimal("price"));
-                        inventory.setAvailableQuantity(fieldSet.readInt("availableQuantity"));
-                        Long productId = fieldSet.readLong("productId");
-                        Product product = productRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("Product not found for ID:" + inventory.getProductId()));
-                        inventory.setProductId(product);
-                        return inventory;
-                    }
+                .fieldSetMapper(fieldSet -> {
+                    Inventory inventory = new Inventory();
+
+                    // Set the inventoryId
+//                    inventory.setInventoryId(fieldSet.readLong("inventoryId"));
+
+                    // Set the productId
+                    Long productId = fieldSet.readLong("productId");
+                    Product product = productRepository.findById(productId)
+                            .orElseThrow(() -> new IllegalArgumentException("Product not found for ID: " + productId));
+                    inventory.setProductId(product);
+
+                    // Set stock quantity
+                    inventory.setStockQuantity(fieldSet.readInt("stockQuantity"));
+
+                    // Set reorder level
+                    inventory.setReorderLevel(fieldSet.readInt("reorderLevel"));
+
+                    // Set supplier name
+                    inventory.setSupplierName(fieldSet.readString("supplierName"));
+
+                    // Set location
+                    inventory.setLocation(fieldSet.readString("location"));
+
+                    // Set unit price
+                    inventory.setUnitPrice(fieldSet.readBigDecimal("unitPrice"));
+
+                    // Set total value
+                    inventory.setTotalValue(fieldSet.readBigDecimal("totalValue"));
+
+                    // Set isActive
+                    inventory.setActive(fieldSet.readBoolean("isActive"));
+
+                    // Set lastStockDate (convert Date to LocalDateTime)
+                    Date date = fieldSet.readDate("lastStockDate", "yyyy-MM-dd'T'HH:mm:ss");
+                    inventory.setLastStockDate(date.toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime());
+
+                    return inventory;
                 })
                 .build();
-
     }
+
     @Bean
     public ItemProcessor<Inventory,Inventory> inventoryProcessor(){
         return inventory ->{
-            if(inventory.getPrice().compareTo(BigDecimal.ZERO) <= 0 ||
-                    (inventory.getAvailableQuantity() != null && inventory.getAvailableQuantity() < 0)){
+            if(inventory.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0 ||
+                    (inventory.getStockQuantity() != null && inventory.getStockQuantity() < 0)){
                 throw new IllegalArgumentException("Invalid inventory data: "+ inventory);
             }
 
@@ -175,8 +201,8 @@ public class BatchConfig {
     public JdbcBatchItemWriter<Inventory> inventoryWriter(){
         return new JdbcBatchItemWriterBuilder<Inventory>()
                 .dataSource(dataSource)
-                .sql("INSERT INTO inventory (inventory_id, product_id, category, price, available_quantity,created_at, updated_at) "+
-                        "VALUES (:inventoryId , :productId.productId, :category , :price, :availableQuantity,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
+                .sql("INSERT INTO inventory (product_id, stock_quantity, reorder_level, supplier_name, location, unit_price, total_value) " +
+                        "VALUES (:productId.productId, :stockQuantity, :reorderLevel, :supplierName, :location, :unitPrice, :totalValue)")
                 .beanMapped()
                 .build();
     }

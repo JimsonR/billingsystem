@@ -111,9 +111,14 @@ public class ProductCatalogController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    @GetMapping("/allproducts/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id") long id){
+        return ResponseEntity.ok(productService.getProduct(id));
+    }
 
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteProduct(@RequestBody Long id){
+
+    @DeleteMapping ("/delete/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
 

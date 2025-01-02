@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-
+@Query(value = "SELECT * from product",nativeQuery = true)
+    ProductDetailDTO[] getAllProducts();
 }
