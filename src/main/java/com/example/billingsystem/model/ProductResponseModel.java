@@ -1,45 +1,39 @@
-package com.example.billingsystem.entity;
+package com.example.billingsystem.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class Product {
+public class ProductResponseModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long productId;
 
-    @Column(nullable = false)
+    private Long productId;
+
     private String name;
 
-    @Column(nullable = false)
     private String category;
 
-    @Column(nullable = false)
     private String description;
 
-    @Column(name = "is_active" , nullable = false , columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive = true;
+    private Boolean isActive;
 
-    @Column(name = "created_at" , columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at" , columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updateAt;
 
-    public long getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 

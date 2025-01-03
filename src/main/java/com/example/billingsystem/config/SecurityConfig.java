@@ -30,8 +30,7 @@ public class SecurityConfig {
     @Autowired
     private AuthEntryPoint unauthorizedHandler;
 
-    @Autowired
-    private DataSource dataSource;
+
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter(){
