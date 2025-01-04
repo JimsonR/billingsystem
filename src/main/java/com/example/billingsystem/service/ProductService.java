@@ -2,6 +2,7 @@ package com.example.billingsystem.service;
 
 import com.example.billingsystem.entity.Product;
 import com.example.billingsystem.model.ProductModel;
+import com.example.billingsystem.model.ProductsList;
 import com.example.billingsystem.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,10 @@ public class ProductService {
          productRepository.deleteById(id);
          return "Product deleted";
     }
-
+public ProductsList test(){
+       ProductsList productList = ProductsList.builder().productId(2).active(true).createdAt("dasd").updateAt("asd").category("dsad").description("asdasd").name("sadasd").build();
+return productList;
+    }
 
 
 

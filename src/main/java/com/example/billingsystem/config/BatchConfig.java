@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -137,7 +138,7 @@ public class BatchConfig {
                 .name("inventoryItemReader")
                 .resource(new FileSystemResource(path.toFile()))
                 .delimited()
-                .names( "productId", "stockQuantity", "reorderLevel", "supplierName", "location", "unitPrice", "totalValue", "isActive", "lastStockDate")
+                .names( "productId", "stockQuantity", "reorderLevel", "supplierName", "location", "unitPrice", "totalValue")
                 .linesToSkip(1)
                 .fieldSetMapper(fieldSet -> {
                     Inventory inventory = new Inventory();
@@ -170,13 +171,11 @@ public class BatchConfig {
                     inventory.setTotalValue(fieldSet.readBigDecimal("totalValue"));
 
                     // Set isActive
-                    inventory.setActive(fieldSet.readBoolean("isActive"));
+//                    inventory.setActive(fieldSet.readBoolean("isActive"));
 
                     // Set lastStockDate (convert Date to LocalDateTime)
-                    Date date = fieldSet.readDate("lastStockDate", "yyyy-MM-dd'T'HH:mm:ss");
-                    inventory.setLastStockDate(date.toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDateTime());
+//                    Date date = fieldSet.readDate("lastStockDate", "yyyy-MM-dd'T'HH:mm:ss");
+                    inventory.setLastStockDate(LocalDateTime.now());
 
                     return inventory;
                 })

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Service
@@ -78,4 +80,31 @@ public class InventoryService {
         }
         return "inventory not found";
     }
+
+    public List<InventoryModel> findByProdId(Long id){
+        List<Inventory> existInventory = inventoryRepository.findByProductIdProductId(id);
+        List<InventoryModel> inventoryModelList = new ArrayList<>();
+        for (Inventory inventory : existInventory ) {
+            InventoryModel inventoryModel= InventoryModel.builder()
+                    .inventoryId(inventory.getInventoryId())
+                    .productId(ProductResponseModel.builder().productId(inventory.getProductId().getProductId())
+                            .name(inventory.getProductId().getName())
+                            .description(inventory.getProductId().getDescription())
+                            .category(inventory.getProductId().getCategory())
+                            .createdAt(inventory.getProductId().getCreatedAt())
+                            .updateAt(inventory.getProductId().getUpdateAt())
+                            .isActive(inventory.getProductId().getIsActive()).build())
+
+                    .reorderLevel(inventory.getReorderLevel())
+                    .stockQuantity(inventory.getStockQuantity())
+                    .supplierName(inventory.getSupplierName())
+                    .location(inventory.getLocation())
+                    .unitPrice(inventory.getUnitPrice())
+                    .build();
+            inventoryModelList.add(inventoryModel);
+        }
+
+       return inventoryModelList;
+    }
+
 }

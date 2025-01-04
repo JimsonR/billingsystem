@@ -148,6 +148,10 @@ public class ProductCatalogController {
         return ResponseEntity.ok(inventoryService.deleteInventory(id));
 }// request param ante /deleteinventory?id=1 ala vastadhi , path variable ante /deleteinventory/1
 
+    @GetMapping("/prodinv")
+    public ResponseEntity<?> getInvByProd(@RequestParam long id){
+        return ResponseEntity.ok(inventoryService.findByProdId(id));
+}
 
 
 
