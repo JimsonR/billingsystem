@@ -46,7 +46,7 @@ public class Inventory {
     private BigDecimal totalValue;
 
 @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     public Long getInventoryId() {
         return inventoryId;

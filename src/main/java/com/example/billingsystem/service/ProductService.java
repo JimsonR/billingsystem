@@ -26,15 +26,17 @@ public class ProductService {
            productRepository.save(product);
            return "product updated";
        }
-
-        Product product = new Product();
-        product.setName(productModel.name);
-        product.setCategory(productModel.category);
-        product.setDescription(productModel.description);
-        product.setCreatedAt(LocalDateTime.now());
-        product.setUpdateAt(LocalDateTime.now());
-        productRepository.save(product);
-        return "product created";
+        if (productRepository.findByNameAndCategory(productModel.name,productModel.category).isEmpty()) {
+            Product product = new Product();
+            product.setName(productModel.name);
+            product.setCategory(productModel.category);
+            product.setDescription(productModel.description);
+            product.setCreatedAt(LocalDateTime.now());
+            product.setUpdateAt(LocalDateTime.now());
+            productRepository.save(product);
+            return "product created";
+        }
+        return "Product already exists";
     }
 
     public Product getProduct(long id){

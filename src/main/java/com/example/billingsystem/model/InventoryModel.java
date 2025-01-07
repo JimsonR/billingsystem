@@ -30,11 +30,30 @@ public class InventoryModel {
 
     private String supplierName;
 
-
-
     private String location;
 
     private BigDecimal unitPrice;
+
+    private BigDecimal totalValue;
+
+    private Boolean isActive;
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public BigDecimal getTotalValue() {
+        return totalValue;
+    }
+
+    public void setTotalValue(BigDecimal totalValue) {
+        this.totalValue = totalValue;
+    }
+
 
 
 
