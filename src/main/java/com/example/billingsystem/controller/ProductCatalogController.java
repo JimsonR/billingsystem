@@ -1,5 +1,6 @@
 package com.example.billingsystem.controller;
 
+import Exceptions.MissingDetailsException;
 import com.example.billingsystem.entity.Inventory;
 import com.example.billingsystem.entity.Product;
 import com.example.billingsystem.model.InventoryModel;
@@ -102,6 +103,16 @@ public class ProductCatalogController {
 
     @PostMapping("/create")
     public ResponseEntity<String> addProduct(@RequestBody ProductModel productModel){
+        StringBuilder validationError = new StringBuilder();
+        if(productModel.name == null || productModel.name.isEmpty()){
+            validationError.append("Product Name ,");
+        }
+        if (productModel.category == null || productModel.category.isEmpty()){
+            validationError.append("Product Category ,");
+        }
+        if(validationError.length()> 0){
+            throw new MissingDetailsException(validationError.toString().trim());
+        }
         return ResponseEntity.ok(productService.createProduct(productModel));
     }
 

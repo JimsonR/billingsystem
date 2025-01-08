@@ -1,5 +1,6 @@
 package com.example.billingsystem.service;
 
+import Exceptions.MissingDetailsException;
 import com.example.billingsystem.entity.Product;
 import com.example.billingsystem.model.ProductModel;
 import com.example.billingsystem.model.ProductsList;
@@ -16,6 +17,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public String createProduct(ProductModel productModel){
+
        if (productModel.id != null){
            Product product = productRepository.findById(productModel.id).get();
            product.setName(productModel.name);

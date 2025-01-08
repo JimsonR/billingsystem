@@ -17,7 +17,7 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryService.getInventory(id));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/set")
     public ResponseEntity<String> setInventory(@RequestBody InventoryModel inventoryModel)
     {
         return ResponseEntity.ok(inventoryService.createUpdateInventory(inventoryModel));

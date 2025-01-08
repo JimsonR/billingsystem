@@ -1,5 +1,7 @@
 package com.example.billingsystem.service;
 
+import Exceptions.InventoryNotFoundException;
+import Exceptions.ProductNotFoundException;
 import com.example.billingsystem.entity.Inventory;
 import com.example.billingsystem.entity.Product;
 import com.example.billingsystem.model.InventoryModel;
@@ -62,7 +64,7 @@ public class InventoryService {
     }
 
     public InventoryModel getInventory(Long id){
-        Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new RuntimeException("no inventory found"));
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(()->new InventoryNotFoundException());
         InventoryModel inventoryModel= InventoryModel.builder()
                 .inventoryId(inventory.getInventoryId())
                 .productId(ProductResponseModel.builder().productId(inventory.getProductId().getProductId())
@@ -120,7 +122,13 @@ public class InventoryService {
     }
 
     public List<InventoryModel> findByProdId(Long id){
+        if(productRepository.findById(id).isEmpty()){
+            throw new ProductNotFoundException();
+        }
         List<Inventory> existInventory = inventoryRepository.findByProductIdProductId(id);
+        if (existInventory.isEmpty()){
+            throw new InventoryNotFoundException();
+        }
         List<InventoryModel> inventoryModelList = new ArrayList<>();
         for (Inventory inventory : existInventory ) {
             InventoryModel inventoryModel= InventoryModel.builder()

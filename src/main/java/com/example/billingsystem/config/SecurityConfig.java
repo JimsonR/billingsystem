@@ -1,5 +1,6 @@
 package com.example.billingsystem.config;
 
+import Exceptions.GlobalExceptionHandler;
 import com.example.billingsystem.entity.Adminstrator;
 import com.example.billingsystem.jwt.AuthEntryPoint;
 import com.example.billingsystem.jwt.AuthTokenFilter;
@@ -32,6 +33,7 @@ public class SecurityConfig {
 
 
 
+
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter(){
         return new AuthTokenFilter();
@@ -49,12 +51,15 @@ public class SecurityConfig {
                 });
         http.sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+
         http.exceptionHandling((exception)-> exception.authenticationEntryPoint(unauthorizedHandler));
 
         http.headers((headers)-> headers.frameOptions((frameOptionsConfig)->frameOptionsConfig.sameOrigin()));
+//
+//        http.formLogin(Customizer.withDefaults());
+//        http.httpBasic(Customizer.withDefaults());
 
-        http.formLogin(Customizer.withDefaults());
-        http.httpBasic(Customizer.withDefaults());
+
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
