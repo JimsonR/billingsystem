@@ -1,29 +1,20 @@
 package com.example.billingsystem.controller;
 
-import Exceptions.MissingDetailsException;
-import com.example.billingsystem.entity.Inventory;
-import com.example.billingsystem.entity.Product;
-import com.example.billingsystem.model.InventoryModel;
+import com.example.billingsystem.Exceptions.MissingDetailsException;
 import com.example.billingsystem.model.ProductModel;
 import com.example.billingsystem.service.InventoryService;
 import com.example.billingsystem.service.ProductService;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 @RestController
 @RequestMapping("products")
@@ -123,9 +114,9 @@ public class ProductCatalogController {
     }
 
     @GetMapping("/allproducts")
-    public ResponseEntity<?> allProducts(){
+    public ResponseEntity<?> allProducts(@RequestParam("pgNo")int pgNo, @RequestParam("pgSize") int pgSize){
 
-        return ResponseEntity.ok(productService.getAllProducts());
+        return ResponseEntity.ok(productService.getAllProducts(pgNo,pgSize));
     }
 
     @GetMapping("/allproducts/{id}")
@@ -141,4 +132,10 @@ public class ProductCatalogController {
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
+
+    @GetMapping("/allproducts/search")
+    public ResponseEntity<?> searchProducts(@RequestParam("pgNo") int pgNo , @RequestParam("pgSize") int pgSize,@RequestParam("term")String term){
+        return ResponseEntity.ok(productService.searchProducts(term, pgNo, pgSize));
+    }
+
 }

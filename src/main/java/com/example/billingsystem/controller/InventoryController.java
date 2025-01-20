@@ -41,4 +41,10 @@ public class InventoryController {
     }
 
 
+    @GetMapping("/all/search")
+    public ResponseEntity<?> getAllInvSearch(@RequestParam("pgNo")int pgNo, @RequestParam("pgSize") int pgSize, @RequestParam("term")String term){
+        return ResponseEntity.ok(inventoryService.searchInventoryBySupAndLocAndQua(term,pgNo,pgSize));
+    }
+
+
 }

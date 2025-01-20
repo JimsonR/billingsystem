@@ -1,11 +1,14 @@
 package com.example.billingsystem.service;
 
-import Exceptions.MissingDetailsException;
 import com.example.billingsystem.entity.Product;
 import com.example.billingsystem.model.ProductModel;
 import com.example.billingsystem.model.ProductsList;
 import com.example.billingsystem.repository.ProductRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ public class ProductService {
     public String createProduct(ProductModel productModel){
 
        if (productModel.id != null){
+           System.out.println(productModel);
            Product product = productRepository.findById(productModel.id).get();
            product.setName(productModel.name);
            product.setCategory(productModel.category);
@@ -45,8 +49,9 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(()->new RuntimeException("product not found"));
     }
 
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    public List<Product> getAllProducts(int pgNo, int pgSize){
+
+        return productRepository.findAll(PageRequest.of(pgNo,pgSize)).getContent();
     }
 
     public String deleteProduct(long id){
@@ -56,6 +61,12 @@ public class ProductService {
 public ProductsList test(){
        ProductsList productList = ProductsList.builder().productId(2).active(true).createdAt("dasd").updateAt("asd").category("dsad").description("asdasd").name("sadasd").build();
 return productList;
+    }
+
+    public List<Product> searchProducts(String searchTerm,int pgNo , int pgSize ){
+        Pageable page = PageRequest.of(pgNo,pgSize);
+        Page<Product> products = productRepository.searchByNameAndCategory(searchTerm,page);
+        return products.getContent();
     }
 
 

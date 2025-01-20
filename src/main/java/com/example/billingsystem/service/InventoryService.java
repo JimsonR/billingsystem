@@ -1,20 +1,17 @@
 package com.example.billingsystem.service;
 
-import Exceptions.InventoryNotFoundException;
-import Exceptions.ProductNotFoundException;
+import com.example.billingsystem.Exceptions.InventoryNotFoundException;
+import com.example.billingsystem.Exceptions.ProductNotFoundException;
 import com.example.billingsystem.entity.Inventory;
 import com.example.billingsystem.entity.Product;
 import com.example.billingsystem.model.InventoryModel;
-import com.example.billingsystem.model.ProductModel;
 import com.example.billingsystem.model.ProductResponseModel;
 import com.example.billingsystem.repository.InventoryRepository;
 import com.example.billingsystem.repository.ProductRepository;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -153,6 +150,34 @@ public class InventoryService {
         }
 
        return inventoryModelList;
+    }
+
+    public List<InventoryModel> searchInventoryBySupAndLocAndQua(String searchTerm, int pgNo, int pgSize){
+        Pageable page =PageRequest.of(pgNo,pgSize);
+        List<Inventory> inventoryList = inventoryRepository.searchInventoryBySupAndLocAndQua(searchTerm,page).getContent();
+        List<InventoryModel> inventoryModelList = new ArrayList<>();
+        for (Inventory inventory : inventoryList ){
+            InventoryModel inventoryModel = InventoryModel.builder()
+                    .inventoryId(inventory.getInventoryId())
+                    .productId(ProductResponseModel.builder().productId(inventory.getProductId().getProductId())
+                            .name(inventory.getProductId().getName())
+                            .description(inventory.getProductId().getDescription())
+                            .category(inventory.getProductId().getCategory())
+                            .description(inventory.getProductId().getCategory())
+                            .createdAt(inventory.getProductId().getCreatedAt())
+                            .updateAt(inventory.getProductId().getUpdateAt())
+                            .isActive(inventory.getProductId().getIsActive()).build())
+                    .totalValue(inventory.getTotalValue())
+                    .reorderLevel(inventory.getReorderLevel())
+                    .stockQuantity(inventory.getStockQuantity())
+                    .location(inventory.getLocation())
+                    .unitPrice(inventory.getUnitPrice())
+                    .supplierName(inventory.getSupplierName())
+                    .isActive(inventory.getActive())
+                    .build();
+            inventoryModelList.add(inventoryModel);
+        }
+        return inventoryModelList;
     }
 
 }

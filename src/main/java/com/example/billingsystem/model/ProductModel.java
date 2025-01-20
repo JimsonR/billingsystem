@@ -11,13 +11,13 @@ import lombok.Data;
 public class ProductModel {
     public Long id;
 
-    @JsonIgnore
+
     public String name;
 
-    @JsonIgnore
+
     public String category;
 
-    @JsonIgnore
+
     public String description;
 
 

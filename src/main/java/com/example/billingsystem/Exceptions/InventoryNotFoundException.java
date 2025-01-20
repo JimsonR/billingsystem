@@ -1,4 +1,4 @@
-package Exceptions;
+package com.example.billingsystem.Exceptions;
 
 public class InventoryNotFoundException extends RuntimeException{
     public InventoryNotFoundException(){

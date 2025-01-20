@@ -1,11 +1,9 @@
-package Exceptions;
+package com.example.billingsystem.Exceptions;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
@@ -34,6 +32,18 @@ public class GlobalExceptionHandler  {
         response.put("timestamp", LocalDateTime.now());  // Optionally include timestamp for debugging
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<String> handleCustomerNotFoundException(CustomerNotFoundException e){
+        return  new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException e){
+        return  new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException runtimeException){
         return new ResponseEntity<>(runtimeException.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
