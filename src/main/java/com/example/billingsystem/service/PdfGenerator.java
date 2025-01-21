@@ -1,6 +1,7 @@
 package com.example.billingsystem.service;
 
 import com.example.billingsystem.entity.Orders;
+import com.example.billingsystem.entity.Product;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
@@ -39,8 +40,8 @@ public class PdfGenerator {
 
         //Add product details
         document.add(new Paragraph("Products:",boldFont));
-        for (long productId : order.getProducts()){
-            document.add(new Paragraph("Product ID:"+productId,normalFont));
+        for (Product productId : order.getProducts()){
+            document.add(new Paragraph("Product ID:"+productId.getProductId(),normalFont));
         }
 
         //Add total price and footer
