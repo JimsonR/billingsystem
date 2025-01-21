@@ -26,6 +26,8 @@ public class Inventory {
 
 @Column(nullable = false)
     private Integer stockQuantity;
+@Column(nullable = false)
+    private Integer originalStockQuantity;
 
 @Column(nullable = false)
     private Integer reorderLevel;
@@ -76,6 +78,17 @@ public class Inventory {
             throw new IllegalArgumentException("Stock Quantity cannot be null or negative");
         }
         this.stockQuantity = stockQuantity;
+    }
+
+    public Integer getOriginalStockQuantity() {
+        return originalStockQuantity;
+    }
+
+    public void setOriginalStockQuantity(Integer originalStockQuantity) {
+        if (originalStockQuantity == null || originalStockQuantity < 0) {
+            throw new IllegalArgumentException("Original Stock Quantity cannot be null or negative");
+        }
+        this.originalStockQuantity = originalStockQuantity;
     }
 
     public Integer getReorderLevel() {

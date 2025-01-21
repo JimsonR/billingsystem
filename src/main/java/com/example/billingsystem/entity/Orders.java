@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Orders {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderId;
 
     @ManyToOne
