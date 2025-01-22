@@ -19,7 +19,7 @@ private InventoryRepository inventoryRepository;
 	void contextLoads() {
 //		CustomerModel customerModel1 = CustomerModel.builder().customerName("Allu Arjun").mobileNumber("12345").emailId("jimmybalor@gmail.com").build();
 
-		CustomerModel customerModel2 = CustomerModel.builder().id(1L).customerName("Kishore").mobileNumber("123457").emailId("krrish533@gmail.com").build();
+		CustomerModel customerModel2 = CustomerModel.builder().id(1L).customerName("juju").mobileNumber("123457").emailId("karrimsettijyothikadevi@gmail.com").build();
 
 
 

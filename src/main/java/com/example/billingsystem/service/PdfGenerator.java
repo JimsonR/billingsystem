@@ -24,7 +24,7 @@ public class PdfGenerator {
     @Autowired
     private InventoryService inventoryService;
 
-    public File generateInvoicePdf(Orders order)throws Exception{
+    public File generateInvoicePdf(Orders order , long count)throws Exception{
         //Create a document and set up PDF Output
 
         File directory = new File("invoices");
@@ -35,7 +35,7 @@ public class PdfGenerator {
 
         Document document = new Document(PageSize.A4);
 
-        File pdfFile = new File("invoices/invoice_"+ order.getOrderId()+".pdf");
+        File pdfFile = new File("invoices/invoice_"+ count+".pdf");
         PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
 
         //Open the document for writing
@@ -54,7 +54,8 @@ public class PdfGenerator {
 
 
         //add order and customer information
-        document.add(new Paragraph("Invoice #"+order.getOrderId(),boldFont));
+        document.add(new Paragraph("Invoice #"+count,boldFont));
+        document.add(new Paragraph("Order ID #" + order.getOrderId(),boldFont));
         document.add(new Paragraph("Customer: " +order.getCustomer().getCustomerName(),normalFont));
         document.add(new Paragraph("Email: "+ order.getCustomer().getEmailId(),normalFont));
         document.add(new Paragraph("Phone: "+order.getCustomer().getMobileNumber(),normalFont));

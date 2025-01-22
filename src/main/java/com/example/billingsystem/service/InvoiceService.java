@@ -31,11 +31,17 @@ public Invoice generateInvoice(Orders order)throws Exception {
     invoice.setInvoiceDate(LocalDateTime.now());
 
     //Generate PDF
-    String pdfPath = pdfGenerator.generateInvoicePdf(order).getPath();
-    invoice.setPdfPath(pdfPath);
+    try {
+        String pdfPath = pdfGenerator.generateInvoicePdf(order, invoiceRepository.count()).getPath();
+        invoice.setPdfPath(pdfPath);
 
-    emailService.sendInvoiceEmail(order.getCustomer().getEmailId(),"Your Order Invoice","Please find attached your invoice.",pdfPath);
+        emailService.sendInvoiceEmail(order.getCustomer().getEmailId(), "Your Order Invoice", "Please find attached your invoice.", pdfPath);
 
+
+    }catch (Exception e){
+        System.err.println("Error while generating and sending invoice: " + e.getMessage());
+
+    }
     return invoiceRepository.save(invoice);
 }
 
