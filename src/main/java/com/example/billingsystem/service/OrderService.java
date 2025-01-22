@@ -3,10 +3,7 @@ package com.example.billingsystem.service;
 import com.example.billingsystem.Exceptions.InventoryNotFoundException;
 import com.example.billingsystem.Exceptions.OrderNotFoundException;
 import com.example.billingsystem.Exceptions.ProductNotFoundException;
-import com.example.billingsystem.entity.Customer;
-import com.example.billingsystem.entity.Inventory;
-import com.example.billingsystem.entity.Orders;
-import com.example.billingsystem.entity.Product;
+import com.example.billingsystem.entity.*;
 import com.example.billingsystem.model.CustomerModel;
 import com.example.billingsystem.model.OrderModel;
 import com.example.billingsystem.model.OrderResponseDTO;
@@ -45,8 +42,11 @@ public class OrderService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private InvoiceService invoiceService;
+
 @Transactional
-    public String createAndUpdate(OrderModel orderModel){
+    public String createAndUpdate(OrderModel orderModel) throws Exception {
 
 
         if (orderModel.getId() != null){
@@ -108,7 +108,7 @@ public class OrderService {
 //            }
 //            order.setStatus(order.getStatus());
 //            order.setTotalPrice(total);
-//            orderRepository.save(order);
+           invoiceService.generateInvoice(orderRepository.save(order));
 
             return "order updated";
         }
@@ -177,7 +177,7 @@ public class OrderService {
         orders.setProducts(products);
         orders.setTotalPrice(total);
         orders.setStatus(orderModel.getStatus());
-orderRepository.save(orders);
+    invoiceService.generateInvoice(orderRepository.save(orders));
 return "Order created successfully";
 
 

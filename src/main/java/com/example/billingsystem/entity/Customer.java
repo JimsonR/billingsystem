@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,10 +19,10 @@ public class Customer {
 
     private String customerName;
 
+    @Column(unique = true)
     private String mobileNumber;
 
     private String emailId;
-
     @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL,orphanRemoval = true)
 
     private List<Orders> ordersList;

@@ -34,8 +34,6 @@ public class InventoryService {
 
         if (inventoryModel.getInventoryId() != null){
             Inventory inventory = inventoryRepository.findById(inventoryModel.getInventoryId()).get();
-            inventory.setInventoryId(inventory.getInventoryId());
-            inventory.setProductId(productRepository.findById(inventoryModel.getProductId().getProductId()).get());
             inventory.setStockQuantity(inventoryModel.getStockQuantity());
             inventory.setReorderLevel(inventoryModel.getReorderLevel());
             inventory.setSupplierName(inventoryModel.getSupplierName());
@@ -52,7 +50,6 @@ public class InventoryService {
                 inventory.setStockQuantity(inventoryModel.getStockQuantity());
                 inventory.setReorderLevel(inventoryModel.getReorderLevel());
                 inventory.setSupplierName(inventoryModel.getSupplierName());
-                inventory.setLocation(inventoryModel.getLocation());
                 inventory.setLastStockDate(LocalDateTime.now());// idhi naku doubt
                 inventory.setUnitPrice(inventoryModel.getUnitPrice());
                 inventory.setTotalValue(inventoryModel.getUnitPrice().multiply(BigDecimal.valueOf(inventoryModel.getStockQuantity())));
@@ -67,16 +64,13 @@ public class InventoryService {
                 .productId(ProductResponseModel.builder().productId(inventory.getProductId().getProductId())
                         .name(inventory.getProductId().getName())
                         .description(inventory.getProductId().getDescription())
-                        .category(inventory.getProductId().getCategory()).createdAt(inventory.getProductId().getCreatedAt())
-                        .updateAt(inventory.getProductId().getUpdateAt())
-                        .isActive(inventory.getProductId().getIsActive()).build())
+                        .category(inventory.getProductId().getCategory()).build())
 
                 .reorderLevel(inventory.getReorderLevel())
                 .stockQuantity(inventory.getStockQuantity())
                 .supplierName(inventory.getSupplierName())
                 .location(inventory.getLocation())
                 .unitPrice(inventory.getUnitPrice())
-                .totalValue(inventory.getTotalValue())
                 .build();
         return inventoryModel;
     }
@@ -87,35 +81,6 @@ public class InventoryService {
             return "inventory deleted";
         }
         return "inventory not found";
-    }
-
-    public List<InventoryModel> getAllInventory(int pgNo , int pgSize){
-        Pageable page = PageRequest.of(pgNo,pgSize);
-
-        List<Inventory> inventoryList = inventoryRepository.findAll(page).toList();
-        List<InventoryModel> inventoryModelList = new ArrayList<>();
-        for (Inventory inventory : inventoryList ){
-            InventoryModel inventoryModel = InventoryModel.builder()
-                    .inventoryId(inventory.getInventoryId())
-                    .productId(ProductResponseModel.builder().productId(inventory.getProductId().getProductId())
-                            .name(inventory.getProductId().getName())
-                            .description(inventory.getProductId().getDescription())
-                            .category(inventory.getProductId().getCategory())
-                            .description(inventory.getProductId().getCategory())
-                            .createdAt(inventory.getProductId().getCreatedAt())
-                            .updateAt(inventory.getProductId().getUpdateAt())
-                            .isActive(inventory.getProductId().getIsActive()).build())
-                    .totalValue(inventory.getTotalValue())
-                    .reorderLevel(inventory.getReorderLevel())
-                    .stockQuantity(inventory.getStockQuantity())
-                    .location(inventory.getLocation())
-                    .unitPrice(inventory.getUnitPrice())
-                    .supplierName(inventory.getSupplierName())
-                    .isActive(inventory.getActive())
-                    .build();
-            inventoryModelList.add(inventoryModel);
-        }
-        return inventoryModelList;
     }
 
     public List<InventoryModel> findByProdId(Long id){
@@ -143,8 +108,33 @@ public class InventoryService {
                     .supplierName(inventory.getSupplierName())
                     .location(inventory.getLocation())
                     .unitPrice(inventory.getUnitPrice())
-                    .isActive(inventory.getActive())
-                    .totalValue(inventory.getTotalValue())
+                    .build();
+            inventoryModelList.add(inventoryModel);
+        }
+
+       return inventoryModelList;
+    }
+
+    public List<InventoryModel> getAllInventory(int pgNo, int pgSize) {
+        Pageable pageable = PageRequest.of(pgNo,pgSize);
+        List<Inventory> inventoryList = inventoryRepository.findAll(pageable).toList();
+        List<InventoryModel> inventoryModelList = new ArrayList<>();
+        for(Inventory inventory : inventoryList){
+            InventoryModel inventoryModel= InventoryModel.builder()
+                    .inventoryId(inventory.getInventoryId())
+                    .productId(ProductResponseModel.builder().productId(inventory.getProductId().getProductId())
+                            .name(inventory.getProductId().getName())
+                            .description(inventory.getProductId().getDescription())
+                            .category(inventory.getProductId().getCategory())
+                            .createdAt(inventory.getProductId().getCreatedAt())
+                            .updateAt(inventory.getProductId().getUpdateAt())
+                            .isActive(inventory.getProductId().getIsActive()).build())
+
+                    .reorderLevel(inventory.getReorderLevel())
+                    .stockQuantity(inventory.getStockQuantity())
+                    .supplierName(inventory.getSupplierName())
+                    .location(inventory.getLocation())
+                    .unitPrice(inventory.getUnitPrice())
                     .build();
             inventoryModelList.add(inventoryModel);
         }
@@ -178,6 +168,6 @@ public class InventoryService {
             inventoryModelList.add(inventoryModel);
         }
         return inventoryModelList;
-    }
 
+    }
 }

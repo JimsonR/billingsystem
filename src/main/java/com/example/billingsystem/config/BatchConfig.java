@@ -138,7 +138,7 @@ public class BatchConfig {
                 .name("inventoryItemReader")
                 .resource(new FileSystemResource(path.toFile()))
                 .delimited()
-                .names( "productId", "stockQuantity", "reorderLevel", "supplierName", "location", "unitPrice", "totalValue")
+                .names( "productId", "stockQuantity", "reorderLevel", "supplierName", "location", "unitPrice","originalStockQuantity")
                 .linesToSkip(1)
                 .fieldSetMapper(fieldSet -> {
                     Inventory inventory = new Inventory();
@@ -155,6 +155,9 @@ public class BatchConfig {
                     // Set stock quantity
                     inventory.setStockQuantity(fieldSet.readInt("stockQuantity"));
 
+                    // set original stock quantity
+                    inventory.setOriginalStockQuantity(fieldSet.readInt("stockQuantity"));
+
                     // Set reorder level
                     inventory.setReorderLevel(fieldSet.readInt("reorderLevel"));
 
@@ -168,7 +171,11 @@ public class BatchConfig {
                     inventory.setUnitPrice(fieldSet.readBigDecimal("unitPrice"));
 
                     // Set total value
-                    inventory.setTotalValue(fieldSet.readBigDecimal("totalValue"));
+//                    inventory.setTotalValue(fieldSet.readBigDecimal("totalValue"));
+                    inventory.setTotalValue(inventory.getUnitPrice().multiply(BigDecimal.valueOf(inventory.getStockQuantity())));
+
+
+
 
                     // Set isActive
 //                    inventory.setActive(fieldSet.readBoolean("isActive"));
@@ -200,8 +207,8 @@ public class BatchConfig {
     public JdbcBatchItemWriter<Inventory> inventoryWriter(){
         return new JdbcBatchItemWriterBuilder<Inventory>()
                 .dataSource(dataSource)
-                .sql("INSERT INTO inventory (product_id, stock_quantity, reorder_level, supplier_name, location, unit_price, total_value) " +
-                        "VALUES (:productId.productId, :stockQuantity, :reorderLevel, :supplierName, :location, :unitPrice, :totalValue)")
+                .sql("INSERT INTO inventory (product_id, stock_quantity, reorder_level, supplier_name, location, unit_price) " +
+                        "VALUES (:productId.productId, :stockQuantity, :reorderLevel, :supplierName, :location, :unitPrice)")
                 .beanMapped()
                 .build();
     }

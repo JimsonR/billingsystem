@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CustomerService {
     @Autowired
@@ -15,7 +17,8 @@ public class CustomerService {
 
     public String createAndUpdate(CustomerModel customerModel) {
 
-        if (customerModel.getId() != null) {
+        if (customerModel.getId() != null || findByPhNo(customerModel.getMobileNumber()) != null) {
+
             Customer customer = customerRepository.findById(customerModel.getId()).orElseThrow(() -> new RuntimeException("Customer not found"));
             customer.setCustomerName(customerModel.getCustomerName());
             customer.setMobileNumber(customerModel.getMobileNumber());
@@ -40,6 +43,14 @@ public class CustomerService {
 
         return (CustomerResponseDTO) customer;
     }
+
+    public Customer findByPhNo(String number){
+
+
+        return customerRepository.findByMobileNumber(number).orElseThrow(()->new RuntimeException());
+    }
+
+
 
     public String deleteCustomer(Long id) {
         customerRepository.deleteById(id);

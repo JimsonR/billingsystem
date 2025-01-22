@@ -14,7 +14,7 @@ public class OrderController {
     private OrderService orderService;
 
   @PostMapping("add")
-    public ResponseEntity<String> createAndUpdate(@RequestBody OrderModel orderModel){
+    public ResponseEntity<String> createAndUpdate(@RequestBody OrderModel orderModel) throws Exception {
       return ResponseEntity.ok(orderService.createAndUpdate(orderModel));
   }
 

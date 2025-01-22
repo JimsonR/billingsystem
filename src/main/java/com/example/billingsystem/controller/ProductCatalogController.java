@@ -1,6 +1,8 @@
 package com.example.billingsystem.controller;
 
 import com.example.billingsystem.Exceptions.MissingDetailsException;
+import com.example.billingsystem.model.InventoryModel;
+import com.example.billingsystem.Exceptions.MissingDetailsException;
 import com.example.billingsystem.model.ProductModel;
 import com.example.billingsystem.service.InventoryService;
 import com.example.billingsystem.service.ProductService;
@@ -123,6 +125,33 @@ public class ProductCatalogController {
     public ResponseEntity<?> getProduct(@PathVariable("id") long id){
         return ResponseEntity.ok(productService.getProduct(id));
     }
+
+
+//    @DeleteMapping ("/delete/{id}")
+//    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id){
+//        return ResponseEntity.ok(productService.deleteProduct(id));
+//    }
+
+    @GetMapping("/getinventory")
+    public ResponseEntity<?> getInventory(@RequestParam ("id") long id){
+        return ResponseEntity.ok(inventoryService.getInventory(id));
+    }
+
+@PostMapping("/setinventory")
+    public ResponseEntity<String> setInventory(@RequestBody InventoryModel inventoryModel){
+        return ResponseEntity.ok(inventoryService.createUpdateInventory(inventoryModel));
+}
+
+//@PutMapping("/updateinventory")
+//    public ResponseEntity<String> putInventory(@RequestBody InventoryModel inventoryModel){
+//        return ResponseEntity.ok(inventoryService.createUpdateInventory(inventoryModel));
+//}
+
+@DeleteMapping("/deleteinventory")
+    public ResponseEntity<String> deleteInventory(@RequestParam ("id") long id){
+        return ResponseEntity.ok(inventoryService.deleteInventory(id));
+}// request param ante /deleteinventory?id=1 ala vastadhi , path variable ante /deleteinventory/1
+
     @GetMapping("/prodinv")
     public ResponseEntity<?> getInvByProd(@RequestParam long id){
         return ResponseEntity.ok(inventoryService.findByProdId(id));
