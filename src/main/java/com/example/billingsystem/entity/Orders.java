@@ -1,5 +1,7 @@
 package com.example.billingsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +22,13 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "customer")
+    @JsonBackReference
     private Customer customer;
 
 //    private long productId;
 
     @ElementCollection
+    @JsonManagedReference
     private List<Product> products;
 
     private BigDecimal totalPrice;

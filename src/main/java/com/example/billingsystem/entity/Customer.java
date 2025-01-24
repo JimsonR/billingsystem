@@ -1,5 +1,6 @@
 package com.example.billingsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,7 @@ public class Customer {
 
     private String emailId;
     @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL,orphanRemoval = true)
-
+    @JsonManagedReference
     private List<Orders> ordersList;
 
     public List<Orders> getOrdersList() {

@@ -17,7 +17,7 @@ public class CustomerService {
 
     public String createAndUpdate(CustomerModel customerModel) {
 
-        if (customerModel.getId() != null || findByPhNo(customerModel.getMobileNumber()) != null) {
+        if (findByPhNo(customerModel.getMobileNumber()) != null) {
 
             Customer customer = customerRepository.findById(customerModel.getId()).orElseThrow(() -> new RuntimeException("Customer not found"));
             customer.setCustomerName(customerModel.getCustomerName());

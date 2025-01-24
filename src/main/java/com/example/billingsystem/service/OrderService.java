@@ -1,5 +1,6 @@
 package com.example.billingsystem.service;
 
+import com.example.billingsystem.Exceptions.CustomerNotFoundException;
 import com.example.billingsystem.Exceptions.InventoryNotFoundException;
 import com.example.billingsystem.Exceptions.OrderNotFoundException;
 import com.example.billingsystem.Exceptions.ProductNotFoundException;
@@ -49,11 +50,13 @@ public class OrderService {
     public String createAndUpdate(OrderModel orderModel) throws Exception {
 
 
-        if (orderModel.getId() != null){
-            Orders order = orderRepository.findById(orderModel.getId()).orElseThrow(()-> new RuntimeException("Order not found"));
+        if (orderModel.getId() != null ){
+            Orders order = orderRepository.findById(orderModel.getId()).orElseThrow(()-> new OrderNotFoundException());
             order.setOrderDate(order.getOrderDate());
-            orderModel.setCustomer(customerRepository.findById(orderModel.getCustomer().getId()).orElseThrow(()-> new RuntimeException("Customer not found")));
-
+            order.setCustomer(customerRepository.findByMobileNumber(orderModel.getCustomer().getMobileNumber()).orElseThrow(()-> new CustomerNotFoundException()));
+            if(customerService.findByPhNo(orderModel.getCustomer().getMobileNumber()) == null){
+                customerService.createAndUpdate(orderModel.getCustomer());
+            }
 
             for(long productId : orderModel.getProducts()){
                 order.getProducts().add(productRepository.findById(productId).orElseThrow(()-> new RuntimeException("no product found")));
@@ -115,8 +118,13 @@ public class OrderService {
 
         Orders orders = new Orders();
 
-        orders.setCustomer(customerRepository.findById(orderModel.getCustomer().getId()).orElseThrow(()-> new RuntimeException("Customer not found")));
-
+        orders.setCustomer(customerRepository.findByMobileNumber(orderModel.
+                getCustomer().
+                getMobileNumber()).
+                orElseThrow(()-> new RuntimeException("Customer not found")));
+        if(orders.getCustomer() == null){
+            customerService.createAndUpdate(orderModel.getCustomer());
+        }
         orders.setOrderDate(LocalDateTime.now());
 
         List<Long> productIds = orderModel.getProducts();
@@ -188,12 +196,12 @@ return "Order created successfully";
     }
 
     public List<OrderResponseDTO> getOrders(){
-        List<Orders> orders = orderRepository.findAll();
-        List<OrderResponseDTO> response = new ArrayList<>();
-        for (Orders i : orders){
-            response.add((OrderResponseDTO) i);
-        }
-        return response;
+//        List<Orders> orders = orderRepository.findAll();
+//        List<OrderResponseDTO> response = new ArrayList<>();
+//        for (Orders i : orders){
+//            response.add((OrderResponseDTO) i);
+//        }
+        return orderRepository.orderList();
     }
 
     public String deleteOrder(long id){

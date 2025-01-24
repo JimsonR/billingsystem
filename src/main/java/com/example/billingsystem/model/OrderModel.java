@@ -21,7 +21,7 @@ public class OrderModel {
 
     private Long id;
 
-    private Customer customer;
+    private CustomerModel customer;
 
 
 

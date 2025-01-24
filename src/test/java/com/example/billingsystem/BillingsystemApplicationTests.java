@@ -19,12 +19,12 @@ private InventoryRepository inventoryRepository;
 	void contextLoads() {
 //		CustomerModel customerModel1 = CustomerModel.builder().customerName("Allu Arjun").mobileNumber("12345").emailId("jimmybalor@gmail.com").build();
 
-		CustomerModel customerModel2 = CustomerModel.builder().id(1L).customerName("juju").mobileNumber("123457").emailId("karrimsettijyothikadevi@gmail.com").build();
+		CustomerModel customerModel2 = CustomerModel.builder().id(2L).customerName("jyothika").mobileNumber("123").emailId("karrimsettijyothikadevi@gmail.com").build();
 
 
 
 //	service.createAndUpdate(customerModel1);
-	service.createAndUpdate(customerModel2);
+//	service.createAndUpdate(customerModel);
 //		for (Inventory inventory : inventoryRepository.findAll()){
 //			inventory.setOriginalStockQuantity(inventory.getStockQuantity());
 //			inventoryRepository.save(inventory);

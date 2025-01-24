@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CustomerResponseDTO {
 
-    String getId();
+    Long getId();
 
     String getCustomerName();
 
@@ -14,7 +14,7 @@ public interface CustomerResponseDTO {
 
     String getEmailId();
 
-    List<Orders> getOrdersList();
+    List<OrderResponseDTO> getOrdersList();
 
 
 }

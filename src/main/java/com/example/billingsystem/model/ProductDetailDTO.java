@@ -2,7 +2,7 @@ package com.example.billingsystem.model;
 
 public interface ProductDetailDTO {
 
-    Long getProductID();
+    Long getProductId();
 
     String  getName();
 
