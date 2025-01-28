@@ -18,12 +18,13 @@ private InventoryRepository inventoryRepository;
 	@Test
 	void contextLoads() {
 //		CustomerModel customerModel1 = CustomerModel.builder().customerName("Allu Arjun").mobileNumber("12345").emailId("jimmybalor@gmail.com").build();
+		CustomerModel customerModel2 = CustomerModel.builder().id(1L).customerName("jyothika").mobileNumber("1234").emailId("karrimsettijyothikadevi@gmail.com").build();
 
-		CustomerModel customerModel2 = CustomerModel.builder().id(2L).customerName("jyothika").mobileNumber("123").emailId("karrimsettijyothikadevi@gmail.com").build();
+//		CustomerModel customerModel2 = CustomerModel.builder().id(2L).customerName("kishore").mobileNumber("123").emailId("krrish533@gmail.com").build();
 
 
 
-//	service.createAndUpdate(customerModel1);
+	service.createAndUpdate(customerModel2);
 //	service.createAndUpdate(customerModel);
 //		for (Inventory inventory : inventoryRepository.findAll()){
 //			inventory.setOriginalStockQuantity(inventory.getStockQuantity());

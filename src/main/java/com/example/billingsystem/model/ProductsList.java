@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ProductsList {
 
-    private int productId;
+    private Long productId;
     private String name;
     private String category;
     private String description;

@@ -4,6 +4,7 @@ import com.example.billingsystem.Exceptions.MissingDetailsException;
 import com.example.billingsystem.model.InventoryModel;
 import com.example.billingsystem.Exceptions.MissingDetailsException;
 import com.example.billingsystem.model.ProductModel;
+import com.example.billingsystem.model.ProductsList;
 import com.example.billingsystem.service.InventoryService;
 import com.example.billingsystem.service.ProductService;
 import org.springframework.batch.core.Job;
@@ -17,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("products")
@@ -166,5 +169,12 @@ public class ProductCatalogController {
     public ResponseEntity<?> searchProducts(@RequestParam("pgNo") int pgNo , @RequestParam("pgSize") int pgSize,@RequestParam("term")String term){
         return ResponseEntity.ok(productService.searchProducts(term, pgNo, pgSize));
     }
+
+    @PostMapping("/allproducts/ids")
+    public ResponseEntity<?> listProducts(@RequestBody long[] ids){
+
+        return ResponseEntity.ok(productService.productAndQuantityList(ids));
+    }
+
 
 }
