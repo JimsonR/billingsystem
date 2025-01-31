@@ -2,10 +2,13 @@ package com.example.billingsystem.service;
 
 import com.example.billingsystem.entity.Invoice;
 import com.example.billingsystem.entity.Orders;
+import com.example.billingsystem.events.InvoiceGeneratedEvent;
 import com.example.billingsystem.repository.InvoiceRepository;
 import com.example.billingsystem.repository.OrderRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,11 +24,16 @@ public class InvoiceService {
 @Autowired
     private EmailService emailService;
 
+
+
 @Autowired
     private PdfGenerator pdfGenerator;
 
-public Invoice generateInvoice(Orders order)throws Exception {
-    Invoice invoice = new Invoice();
+@EventListener
+//public Invoice generateInvoice(Orders order)throws Exception {
+    public Invoice generateInvoice(InvoiceGeneratedEvent event)throws Exception {
+    Orders order = event.getOrder();
+        Invoice invoice = new Invoice();
     invoice.setOrders(order);
     invoice.setTotalPrice(order.getTotalPrice());
     invoice.setInvoiceDate(LocalDateTime.now());
@@ -42,6 +50,7 @@ public Invoice generateInvoice(Orders order)throws Exception {
         System.err.println("Error while generating and sending invoice: " + e.getMessage());
 
     }
+
     return invoiceRepository.save(invoice);
 }
 

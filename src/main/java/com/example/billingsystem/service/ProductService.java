@@ -21,6 +21,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+
     public String createProduct(ProductModel productModel){
 
        if (productModel.id != null){
@@ -107,7 +108,9 @@ public Map<ProductsList , Long> getProductsById(long[] ids){
      List<ProductAndQuantity> list = new ArrayList<>();
         for(Map.Entry<ProductsList, Long> prods: getProductsById(ids).entrySet()){
 
-            list.add(ProductAndQuantity.builder().product(prods.getKey()).Quantity(prods.getValue()).build());
+            list.add(ProductAndQuantity.builder()
+                    .product(prods.getKey())
+                    .Quantity(prods.getValue()).price(invent(prods.getKey().getProductId())).build());
         }
         return list;
  }

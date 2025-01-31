@@ -5,6 +5,7 @@ import com.example.billingsystem.Exceptions.InventoryNotFoundException;
 import com.example.billingsystem.Exceptions.OrderNotFoundException;
 import com.example.billingsystem.Exceptions.ProductNotFoundException;
 import com.example.billingsystem.entity.*;
+import com.example.billingsystem.events.InvoiceGeneratedEvent;
 import com.example.billingsystem.model.CustomerModel;
 import com.example.billingsystem.model.OrderModel;
 import com.example.billingsystem.model.OrderResponseDTO;
@@ -14,6 +15,10 @@ import com.example.billingsystem.repository.OrderRepository;
 import com.example.billingsystem.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -46,16 +51,31 @@ public class OrderService {
     @Autowired
     private InvoiceService invoiceService;
 
-@Transactional
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    @Transactional
     public String createAndUpdate(OrderModel orderModel) throws Exception {
 
 
         if (orderModel.getId() != null ){
             Orders order = orderRepository.findById(orderModel.getId()).orElseThrow(()-> new OrderNotFoundException());
+
             order.setOrderDate(order.getOrderDate());
-            order.setCustomer(customerRepository.findByMobileNumber(orderModel.getCustomer().getMobileNumber()).orElseThrow(()-> new CustomerNotFoundException()));
-            if(customerService.findByPhNo(orderModel.getCustomer().getMobileNumber()) == null){
-                customerService.createAndUpdate(orderModel.getCustomer());
+
+            order.setCustomer(customerRepository.findByMobileNumber(orderModel
+                    .getCustomer()
+                    .getMobileNumber())
+                    .orElseThrow(()-> new CustomerNotFoundException()));
+
+            if(customerService
+                    .findByPhNo(orderModel
+                            .getCustomer()
+                            .getMobileNumber()) == null){
+
+                customerService
+                        .createAndUpdate(orderModel
+                                .getCustomer());
             }
 
             for(long productId : orderModel.getProducts()){
@@ -111,7 +131,9 @@ public class OrderService {
 //            }
 //            order.setStatus(order.getStatus());
 //            order.setTotalPrice(total);
-           invoiceService.generateInvoice(orderRepository.save(order));
+            Orders ordered = orderRepository.save(order);
+//           invoiceService.generateInvoice(orderRepository.save(order));
+            eventPublisher.publishEvent(new InvoiceGeneratedEvent(this, ordered));
 
             return "order updated";
         }
@@ -185,8 +207,10 @@ public class OrderService {
         orders.setProducts(products);
         orders.setTotalPrice(total);
         orders.setStatus(orderModel.getStatus());
-    invoiceService.generateInvoice(orderRepository.save(orders));
-return "Order created successfully";
+        Orders ordered = orderRepository.save(orders);
+//           invoiceService.generateInvoice(orderRepository.save(order));
+        eventPublisher.publishEvent(new InvoiceGeneratedEvent(this, ordered));
+        return "Order created successfully";
 
 
     }
@@ -195,13 +219,16 @@ return "Order created successfully";
         return (OrderResponseDTO)orderRepository.findById(id).orElseThrow(()->new OrderNotFoundException());
     }
 
-    public List<OrderResponseDTO> getOrders(){
+    public List<OrderResponseDTO> getOrders(int pgNo , int pgSize){
 //        List<Orders> orders = orderRepository.findAll();
 //        List<OrderResponseDTO> response = new ArrayList<>();
 //        for (Orders i : orders){
 //            response.add((OrderResponseDTO) i);
 //        }
-        return orderRepository.orderList();
+
+        Pageable pageable = PageRequest.of(pgNo,pgSize);
+
+        return orderRepository.orderList(pageable).getContent();
     }
 
     public String deleteOrder(long id){
@@ -210,6 +237,13 @@ return "Order created successfully";
 
         return "Product deleted";
     }
+
+    public List<OrderResponseDTO> findByCustomerMobileNumber(String term , int pgNo , int pgSize ){
+    Pageable page = PageRequest.of(pgNo , pgSize);
+    return orderRepository.search(term , page).getContent();
+    }
+
+
 
 
 
